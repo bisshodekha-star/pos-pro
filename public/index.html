@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>POS Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+</head>
+<body>
+
+<!-- ============ LOGIN SCREEN ============ -->
+<div id="login-screen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🛍️</div>
+    <h1>POS Pro</h1>
+    <p id="login-shop-name" class="login-sub">রহমান ফ্যাশন শোরুম</p>
+    <form id="login-form">
+      <input type="text" id="login-username" class="search" placeholder="ইউজারনেম" autocomplete="username" required>
+      <input type="password" id="login-password" class="search" placeholder="পাসওয়ার্ড" autocomplete="current-password" required>
+      <p class="err" id="login-err"></p>
+      <button type="submit" class="btn" id="login-btn">লগইন করুন</button>
+    </form>
+    <button class="btn alt" id="setup-btn" style="display:none">🔐 প্রথমবার সেটআপ (admin/admin123)</button>
+    <p class="hint" id="login-hint"></p>
+  </div>
+</div>
+
+<!-- ============ NAVIGATION ============ -->
+<nav class="nav" id="nav">
+  <div class="brand">POS Pro<small class="shop-name-sync">রহমান ফ্যাশন শোরুম</small></div>
+  <button class="active" data-go="home"><span class="ic">🏠</span>হোম</button>
+  <button data-go="billing"><span class="ic">🛒</span>বিলিং</button>
+  <button data-go="history"><span class="ic">🧾</span>হিস্ট্রি</button>
+  <button data-go="khata"><span class="ic">📒</span>খাতা</button>
+  <button data-go="products"><span class="ic">📦</span>পণ্য</button>
+  <button data-go="stock"><span class="ic">📊</span>স্টক</button>
+  <button data-go="customers"><span class="ic">👥</span>কাস্টমার</button>
+  <button data-go="shift"><span class="ic">⏰</span>শিফট</button>
+</nav>
+
+<main class="main" id="app-main" style="display:none">
+
+<!-- ============ স্বচ্ছ কাঁচের হেডার ============ -->
+<header class="glass">
+  <button class="menu qbh" id="qb-open" aria-label="কুইকবিল" title="কুইকবিল">⚡<small>কুইকবিল</small></button>
+  <h1>POS Pro</h1>
+  <div class="shopline">
+    <span id="shop-name">রহমান ফ্যাশন শোরুম</span>
+    <span id="online-indicator" class="online-dot" title="অনলাইন"></span>
+  </div>
+  <button class="menu" id="openSet" aria-label="সেটিং">☰</button>
+</header>
+
+<!-- ============ হোম / ড্যাশবোর্ড ============ -->
+<section class="view active" id="home">
+  <div class="stats">
+    <div class="stat s1"><b id="kpi-today">৳০</b><span>আজকের বিক্রি</span></div>
+    <div class="stat s2"><b id="kpi-bills">০টি</b><span>আজকের বিল</span></div>
+    <div class="stat s3"><b id="kpi-due">৳০</b><span id="kpi-duen">মোট বাকি</span></div>
+    <div class="stat s4"><b id="kpi-total">৳০</b><span>মোট বিক্রি</span></div>
+  </div>
+
+  <div class="panel">
+    <h2>👗 পোশাক অনুযায়ী বিক্রি</h2>
+    <div class="donutwrap">
+      <div class="donut" id="donut"><div class="hole"><b id="d-total">৳০</b><small>মোট বিক্রি</small></div></div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+
+  <div class="panel"><h2>⚠️ কম স্টক সতর্কতা</h2><div id="low"></div></div>
+  <div class="panel"><h2>🏆 সেরা বিক্রিত পণ্য</h2><div id="top"></div></div>
+
+  <button class="btn alt" id="load-seed-btn">🎲 ডেমো ডাটা লোড করুন</button>
+</section>
+
+<!-- ============ বিলিং ============ -->
+<section class="view" id="billing">
+  <header class="head"><h1>বিলিং</h1><p>কুইকবিল বোতামে ক্লিক করুন (ডানদিকে ⚡)</p></header>
+  <div class="panel">
+    <h2>🛒 বিক্রি শুরু করুন</h2>
+    <p class="hint" style="text-align:left;margin:0 0 12px">ডানদিকের সবুজ ⚡ কুইকবিল বোতামে ক্লিক করে বারকোড স্ক্যান বা পণ্য যোগ করে বিল তৈরি করুন।</p>
+    <button class="btn" id="billing-start">⚡ কুইকবিল খুলুন</button>
+  </div>
+  <div class="panel">
+    <h2>⏸️ হোল্ড করা বিল</h2>
+    <div id="held-bills-list"></div>
+  </div>
+</section>
+
+<!-- ============ সেলস হিস্ট্রি ============ -->
+<section class="view" id="history">
+  <header class="head"><h1>🧾 সেলস হিস্ট্রি</h1><p>সব বিলের তালিকা</p></header>
+  <div class="two">
+    <input type="date" id="hist-from" class="search">
+    <input type="date" id="hist-to" class="search">
+  </div>
+  <input class="search" id="hist-q" placeholder="🔍 ইনভয়েস নম্বর / কাস্টমার / মোবাইল">
+  <button class="btn alt" id="hist-search">🔍 খুঁজুন</button>
+  <div class="panel" id="hist-list" style="margin-top:12px"></div>
+</section>
+
+<!-- ============ খাতা ============ -->
+<section class="view" id="khata">
+  <header class="head"><h1>📒 খাতা</h1><p id="khp">বাকি রাখা ও পরিশোধের হিসাব</p></header>
+  <div class="panel" id="duel"></div>
+  <div class="panel"><h2>🕒 সাম্প্রতিক লেনদেন</h2><div id="recent"></div></div>
+</section>
+
+<!-- ============ পণ্য ============ -->
+<section class="view" id="products">
+  <header class="head"><h1>📦 পণ্য</h1><p id="pcount"></p></header>
+  <div class="opts" id="popts">
+    <button data-o="po-add"><span>➕</span>পণ্য যোগ</button>
+    <button data-o="po-stock"><span>📦</span>কত পিস আছে</button>
+    <button data-o="po-list"><span>📋</span>সব পণ্য</button>
+  </div>
+  <div class="po" id="po-add"><div class="panel"><h2>➕ নতুন পণ্য যোগ করুন</h2>
+    <input class="search" id="np-n" placeholder="পণ্যের নাম (যেমন: ফর্মাল শার্ট)">
+    <div class="two" style="margin-bottom:10px"><input class="search" id="np-b" inputmode="decimal" placeholder="কেনা দাম ৳"><input class="search" id="np-p" inputmode="decimal" placeholder="বিক্রি দাম ৳"></div>
+    <input class="search" id="np-s" inputmode="numeric" placeholder="স্টকের পরিমাণ (পিস)">
+    <div class="scanrow"><input class="search" id="np-c" placeholder="বারকোড (স্ক্যান করুন বা 🎲 অটো)" autocomplete="off"><button id="np-gen" aria-label="অটো বারকোড">🎲</button></div>
+    <div class="two" style="margin-bottom:4px"><select class="search" id="np-cat" aria-label="ক্যাটাগরি"></select><input class="search" id="np-z" placeholder="সাইজ (M, L, XL…)"></div>
+    <button class="btn" id="np-add">+ পণ্য যোগ করুন</button></div></div>
+  <div class="po" id="po-stock"><div class="panel"><h2>📦 কোন পণ্য কত পিস আছে</h2>
+    <div class="ln" style="padding-top:0"><span id="sk-tot"></span></div>
+    <input class="search" id="sk-q" placeholder="🔍 পণ্য খুঁজুন">
+    <div id="sk"></div></div></div>
+  <div class="po" id="po-list"><div class="panel"><h2>📋 সব পণ্য <span id="np-cnt" style="color:var(--muted);font-size:15px;font-weight:400"></span></h2>
+    <div id="fprod"></div>
+    <button class="btn alt" id="np-printall">🏷️ সব পণ্যের বারকোড প্রিন্ট</button></div></div>
+</section>
+
+<!-- ============ স্টক ============ -->
+<section class="view" id="stock">
+  <header class="head"><h1>📊 স্টক</h1><p>কম স্টকের পণ্য আগে দেখাচ্ছে</p></header>
+  <div class="panel" id="slist"></div>
+</section>
+
+<!-- ============ কাস্টমার ============ -->
+<section class="view" id="customers">
+  <header class="head"><h1>👥 কাস্টমার</h1><p id="cust-count">মোট ০ জন</p></header>
+  <input class="search" id="cust-q" placeholder="🔍 নাম বা মোবাইল নম্বর">
+  <button class="btn alt" id="cust-add-btn">+ নতুন কাস্টমার</button>
+  <div class="panel" id="cust-list" style="margin-top:12px"></div>
+</section>
+
+<!-- ============ শিফট ============ -->
+<section class="view" id="shift">
+  <header class="head"><h1>⏰ ক্যাশিয়ার শিফট</h1><p>দিনের ক্যাশ হিসাব</p></header>
+  <div class="panel" id="shift-current"></div>
+  <div class="panel"><h2>🕒 সাম্প্রতিক শিফট</h2><div id="shift-list"></div></div>
+</section>
+
+<!-- ============ সাপ্লায়ার ============ -->
+<section class="view" id="suppliers">
+  <header class="head"><h1>🚚 সাপ্লায়ার</h1><p id="sup-summary">মোট দেনা ৳০</p></header>
+  <button class="btn alt" id="sup-add-btn">+ নতুন সাপ্লায়ার</button>
+  <div class="panel" id="sup-list" style="margin-top:12px"></div>
+</section>
+
+<!-- ============ খরচ ============ -->
+<section class="view" id="expense">
+  <header class="head"><h1>💸 খরচ</h1><p id="exp-summary">আজকের খরচ ৳০</p></header>
+  <button class="btn alt" id="exp-add-btn">+ খরচ যোগ করুন</button>
+  <div class="panel" id="exp-list" style="margin-top:12px"></div>
+</section>
+
+<!-- ============ রিপোর্ট ============ -->
+<section class="view" id="reports">
+  <header class="head"><h1>📈 রিপোর্ট</h1><p>তারিখ অনুযায়ী বিক্রি ও লাভ-ক্ষতি</p></header>
+  <div class="two">
+    <input type="date" id="rep-from" class="search">
+    <input type="date" id="rep-to" class="search">
+  </div>
+  <button class="btn" id="rep-gen">📊 রিপোর্ট তৈরি করুন</button>
+  <div class="panel" id="rep-out" style="margin-top:12px"></div>
+</section>
+
+<!-- ============ রিটার্ন ============ -->
+<section class="view" id="returns">
+  <header class="head"><h1>↩️ রিটার্ন</h1><p>পণ্য ফেরত ও বিল বাতিল</p></header>
+  <button class="btn alt" id="ret-add-btn">+ নতুন রিটার্ন</button>
+  <div class="panel" id="ret-list" style="margin-top:12px"></div>
+</section>
+
+<!-- ============ ইউজার ============ -->
+<section class="view" id="users">
+  <header class="head"><h1>🔐 ইউজার</h1><p>ইউজার ম্যানেজমেন্ট</p></header>
+  <button class="btn alt" id="usr-add-btn">+ নতুন ইউজার</button>
+  <div class="panel" id="usr-list" style="margin-top:12px"></div>
+</section>
+
+<!-- ============ ফাইল ============ -->
+<section class="view" id="files">
+  <header class="head"><h1>🗂️ ফাইল</h1><p>মডিউল ও পাসওয়ার্ড</p></header>
+  <div class="panel"><h2>মডিউল</h2><div id="fl"></div></div>
+  <div class="panel"><h2>নতুন মডিউল যোগ করুন</h2>
+    <div class="two"><input class="search" id="cm-ic" placeholder="আইকন (যেমন 🎁)" maxlength="2"><input class="search" id="cm-n" placeholder="নাম" maxlength="14"></div>
+    <button class="btn" id="cm-add">+ যোগ করুন</button></div>
+  <div class="panel"><h2>পাসওয়ার্ড বদলান</h2>
+    <p class="hint" style="text-align:left;margin:0 0 8px">নিজের পাসওয়ার্ড বদলাতে নিচের ঘর পূরণ করুন।</p>
+    <input class="search" id="pw-new" type="password" placeholder="নতুন পাসওয়ার্ড (কমপক্ষে ৪ অক্ষর)">
+    <button class="btn alt" id="pw-save">পাসওয়ার্ড সেভ করুন</button>
+  </div>
+  <button class="btn" id="logout-btn">🚪 লগআউট</button>
+</section>
+
+</main>
+
+<!-- ============ কুইকবিল মডাল ============ -->
+<div class="modal" id="qb" role="dialog" aria-label="কুইকবিল"><div class="sheet">
+  <h2>⚡ কুইকবিল <button class="x" id="qb-close" aria-label="বন্ধ">✕</button></h2>
+  <div class="qgrid">
+  <div class="ql">
+    <div class="scanrow"><input class="search" id="qb-code" placeholder="বারকোড" autocomplete="off"><button id="qb-cam" aria-label="ক্যামেরা স্ক্যান">📷</button></div>
+    <div class="cam" id="cam"><video id="cam-v" playsinline muted></video><div class="frame"></div></div>
+    <div id="qb-items"></div>
+    <div class="two" style="margin-top:12px"><input class="search" id="qb-name" placeholder="কাস্টমারের নাম"><input class="search" id="qb-mob" type="tel" placeholder="মোবাইল নম্বর"></div>
+    <label class="field" for="qb-paid" style="margin-top:12px">কাস্টমার কত টাকা দিল?</label>
+    <input class="search" id="qb-paid" inputmode="decimal" placeholder="যেমন 2000" autocomplete="off">
+    <label class="field" for="qb-method" style="margin-top:12px">পেমেন্ট মেথড</label>
+    <select class="search" id="qb-method">
+      <option value="cash">নগদ</option>
+      <option value="bkash">bKash</option>
+      <option value="nagad">Nagad</option>
+      <option value="card">কার্ড</option>
+    </select>
+    <div class="res" id="qb-res"></div>
+  </div>
+  <div class="qr">
+    <div class="sum">
+      <div class="sr"><label>মোট লাইন</label><div class="bx" id="s-line">0</div></div>
+      <div class="sr"><label>মোট পিস</label><div class="bx" id="s-qty">0</div></div>
+      <div class="sr"><label>মোট দাম</label><div class="bx" id="s-tot">0.00</div></div>
+      <div class="sr"><label>VAT<small>ভ্যাট</small></label><div class="bx" id="s-vat">0.00</div></div>
+      <div class="sr"><label>ছাড় %</label><input id="s-dp" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+      <div class="sr"><label>ছাড় ৳</label><input id="s-dt" inputmode="decimal" autocomplete="off" placeholder="0"></div>
+      <div class="sr"><label>ফেরত</label><div class="bx" id="s-ret">0.00</div></div>
+      <div class="sr big"><label>সর্বমোট</label><div class="bx" id="s-sub">0.00</div></div>
+    </div>
+    <button class="btn" id="qb-hold">⏸️ হোল্ড করুন</button>
+    <button class="btn" id="qb-done">✅ বিল সম্পন্ন করুন</button>
+    <button class="btn alt" id="qb-cancel">বাতিল</button>
+  </div>
+</div>
+</div></div>
+
+<!-- ============ পাসওয়ার্ড লক ============ -->
+<div class="modal" id="lock" role="dialog" aria-label="পাসওয়ার্ড"><div class="sheet" style="max-width:400px">
+  <h2 id="lk-h">🔒 পাসওয়ার্ড দিন</h2>
+  <p id="lk-p" style="color:var(--muted);margin-bottom:12px"></p>
+  <input class="search" id="pw" type="password" autocomplete="off" placeholder="পাসওয়ার্ড">
+  <input class="search" id="pw2" type="password" autocomplete="off" placeholder="আবার লিখুন" style="display:none">
+  <p class="err" id="pw-err"></p>
+  <div class="lkrow"><button class="btn" id="pw-ok">খুলুন</button><button class="btn alt" id="pw-cancel">বাতিল</button></div>
+</div></div>
+
+<!-- ============ বারকোড প্রিন্ট ============ -->
+<div class="modal" id="pm" role="dialog" aria-label="বারকোড প্রিন্ট"><div class="sheet" style="max-width:400px">
+  <h2>🏷️ বারকোড প্রিন্ট <button class="x" id="pm-x" aria-label="বন্ধ">✕</button></h2>
+  <div id="pm-prev" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:10px"></div>
+  <p class="hint" id="pm-note" style="margin:0 0 12px"></p>
+  <label class="field" for="pm-n">প্রতি পণ্যের কয়টি লেবেল?</label>
+  <input class="search" id="pm-n" inputmode="numeric" value="2">
+  <button class="btn" id="pm-go">🖨️ প্রিন্ট করুন</button>
+</div></div>
+
+<!-- ============ বিল সম্পন্ন পপ-আপ ============ -->
+<div class="modal" id="chg" role="dialog" aria-label="বিল সম্পন্ন"><div class="sheet" style="max-width:380px;text-align:center">
+  <div style="font-size:46px;line-height:1.1">✅</div>
+  <h2 style="justify-content:center;margin:6px 0 2px">বিল সম্পন্ন!</h2>
+  <p class="hint" id="chg-inv" style="margin:0 0 14px"></p>
+  <div class="ln"><span>মোট বিল</span><span id="chg-t"></span></div>
+  <div class="ln"><span>কাস্টমার দিল</span><span id="chg-p"></span></div>
+  <div class="res" id="chg-r" style="font-size:20px;margin:12px 0"></div>
+  <button class="btn" id="chg-print">🖨️ রিসিট প্রিন্ট</button>
+  <button class="btn alt" id="chg-ok">ঠিক আছে</button>
+</div></div>
+
+<!-- ============ রিসিট প্রিন্ট এরিয়া ============ -->
+<div id="receipt-print"></div>
+<div id="print-area"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- ============ সেটিংস ড্রয়ার ============ -->
+<aside class="drawer" id="drawer" role="dialog" aria-label="সেটিং" aria-hidden="true">
+  <div class="top"><h2>সেটিং</h2><button class="x" id="closeSet" aria-label="বন্ধ">✕</button></div>
+
+  <h3>🏪 দোকানের তথ্য</h3>
+  <label class="field" for="set-shop-name">দোকানের নাম</label>
+  <input class="search" id="set-shop-name" maxlength="40" placeholder="দোকানের নাম">
+  <label class="field" for="set-shop-address">ঠিকানা</label>
+  <input class="search" id="set-shop-address" placeholder="বাড়ি, রাস্তা, এলাকা">
+  <label class="field" for="set-shop-phone">মোবাইল ১</label>
+  <input class="search" id="set-shop-phone" placeholder="01XXXXXXXXX">
+  <label class="field" for="set-shop-phone2">মোবাইল ২</label>
+  <input class="search" id="set-shop-phone2" placeholder="01XXXXXXXXX">
+
+  <h3>🖨️ রিসিট ও প্রিন্টার</h3>
+  <label class="field">থার্মাল প্রিন্টার সাইজ</label>
+  <div class="cats" id="set-printer-size">
+    <button data-val="58">৫৮ মিমি</button>
+    <button data-val="80" class="on">৮০ মিমি</button>
+  </div>
+  <label class="field" for="set-receipt-header">রিসিটের উপরের লেখা</label>
+  <input class="search" id="set-receipt-header" placeholder="আপনার বিশ্বাসই আমাদের সম্পদ">
+  <label class="field" for="set-receipt-footer">রিসিটের নিচের লেখা</label>
+  <input class="search" id="set-receipt-footer" placeholder="৩ দিনের মধ্যে রিটার্ন গ্রহণযোগ্য (বিলসহ)">
+
+  <h3>💰 ট্যাক্স ও চার্জ</h3>
+  <label class="field" for="set-vat">VAT (%)</label>
+  <input class="search" id="set-vat" value="0" inputmode="decimal">
+  <label class="field" for="set-invoice-prefix">ইনভয়েস প্রিফিক্স</label>
+  <input class="search" id="set-invoice-prefix" value="INV-">
+
+  <h3>📱 মোবাইল ব্যাংকিং</h3>
+  <label class="field" for="set-bkash">bKash নম্বর</label>
+  <input class="search" id="set-bkash" placeholder="01XXXXXXXXX">
+  <label class="field" for="set-nagad">Nagad নম্বর</label>
+  <input class="search" id="set-nagad" placeholder="01XXXXXXXXX">
+
+  <h3>📊 স্টক</h3>
+  <label class="field" for="set-low-stock">কম স্টক সতর্কতা (পিস)</label>
+  <input class="search" id="set-low-stock" value="20" inputmode="numeric">
+
+  <button class="btn" id="settings-save">💾 সেভ করুন</button>
+</aside>
+
+<script src="/app.js"></script>
+</body>
+</html>

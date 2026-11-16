@@ -1,0 +1,22 @@
+name = "pos-pro"
+compatibility_date = "2024-09-01"
+pages_build_output_dir = "public"
+
+# ============================================================
+#  ENVIRONMENT VARIABLES — set these in Cloudflare Dashboard
+#  (Pages → Settings → Environment variables)
+#
+#  DATABASE_URL     = postgresql://user:pass@host/db?sslmode=require
+#                     (from Neon dashboard connection string)
+#  JWT_SECRET       = any long random string (e.g. 32+ chars)
+#  JWT_ISSUER       = pos-pro
+#
+#  DO NOT put real values here in wrangler.toml — set them in
+#  the Cloudflare dashboard so they stay secret.
+# ============================================================
+
+[vars]
+JWT_ISSUER = "pos-pro"
+
+# For local dev only — copy .env.example to .dev.vars and fill in
+# Never commit .dev.vars

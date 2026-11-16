@@ -1,0 +1,17 @@
+{
+  "name": "pos-pro",
+  "version": "1.0.0",
+  "description": "POS Pro — Clothing Showroom POS (Cloudflare Pages + Neon PostgreSQL)",
+  "private": true,
+  "scripts": {
+    "dev": "npx wrangler pages dev public --compatibility-date=2024-09-01",
+    "deploy": "npx wrangler pages deploy public --project-name=pos-pro",
+    "setup:db": "echo 'Run schema.sql in your Neon SQL Editor'"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4"
+  },
+  "devDependencies": {
+    "wrangler": "^3.78.0"
+  }
+}
