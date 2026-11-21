@@ -1,0 +1,189 @@
+/* POS Pro — Custom styles (complements Tailwind) */
+
+/* Scrollbar */
+::-webkit-scrollbar{width:0;height:0}
+*{scrollbar-width:none}
+
+/* Safe area */
+.safe-top{padding-top:env(safe-area-inset-top)}
+.safe-bottom{padding-bottom:env(safe-area-inset-bottom)}
+
+/* Glass header — white transparent */
+.glass{background:rgba(255,255,255,.08);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid rgba(255,255,255,.15)}
+
+/* Animations */
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}
+.animate-pop{animation:pop .9s}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.animate-slide-up{animation:slideUp .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.animate-fade-in{animation:fadeIn .2s}
+
+/* Donut chart */
+.donut{transition:background .4s}
+
+/* Bar chart */
+.chart-bar-fill{transition:height .3s}
+
+/* Pill badges */
+.pill{display:inline-block;border-radius:999px;padding:3px 14px;font-size:14px;font-weight:500}
+.pill-due{background:#fde2e2;color:#c0392b}
+.pill-paid{background:#d1f7ec;color:#0b7a62}
+.pill-low{background:#fff0cf;color:#a86400}
+
+/* Stock bar */
+.stock-bar{height:8px;background:#0e1d26;border-radius:99px;overflow:hidden}
+.stock-bar i{display:block;height:100%;border-radius:99px}
+
+/* Hide number input arrows */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+
+/* Print: receipt */
+@media print{
+  @page{size:80mm auto;margin:0}
+  html,body{background:#fff!important}
+  body>*:not(#print-area):not(#receipt-print){display:none!important}
+  #receipt-print,#print-area{display:block!important}
+}
+
+/* Print: barcode labels */
+#print-area{display:none}
+@media print{
+  @page{size:100mm 25mm;margin:0}
+}
+
+/* Barcode label */
+.lbl{width:50mm;height:25mm;padding:1.2mm 2mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4mm;background:#fff;color:#000;overflow:hidden;border-radius:4px;text-align:center;line-height:1.1}
+.lbl small{font-size:6.5pt}
+.lbl b{font-size:8.5pt;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbl svg{width:44mm;height:11mm}
+.lbl span{font-size:9pt;font-weight:700}
+
+/* Receipt */
+.receipt{display:none;font-family:'Hind Siliguri',monospace;color:#000;background:#fff;padding:10px 8px;width:80mm;font-size:12px;line-height:1.5}
+.receipt.on{display:block}
+.receipt .r-header{text-align:center;margin-bottom:4px}
+.receipt .r-logo{max-height:50px;max-width:60%;margin-bottom:4px}
+.receipt .r-shop-name{font-size:16px;font-weight:700}
+.receipt .r-shop-addr{font-size:10px;margin-top:2px}
+.receipt .r-shop-phone{font-size:10px;margin-top:1px}
+.receipt .r-tagline{text-align:center;font-size:10px;font-style:italic;margin:4px 0;opacity:.8}
+.receipt .r-line{display:flex;justify-content:space-between;padding:1px 0;font-size:11px}
+.receipt .r-bold{font-weight:700}
+.receipt .r-divider{border-top:1px dashed #888;margin:5px 0}
+.receipt .r-items-header{display:flex;justify-content:space-between;font-size:10px;font-weight:700;opacity:.7;padding-bottom:2px}
+.receipt .r-item{padding:3px 0;border-bottom:1px dotted #ddd}
+.receipt .r-item:last-child{border-bottom:0}
+.receipt .r-item-name{font-size:11px;font-weight:600}
+.receipt .r-item-detail{font-size:10px;opacity:.7}
+.receipt .r-item-disc{font-size:10px;color:#c0392b}
+.receipt .r-item-total{font-size:12px;font-weight:700;text-align:right;margin-top:1px}
+.receipt .r-discount span:last-child{color:#c0392b}
+.receipt .r-net{font-size:13px;font-weight:700;border-top:2px solid #000;padding-top:3px;margin-top:2px}
+.receipt .r-change span:last-child{color:#0b7a62}
+.receipt .r-due span:last-child{color:#c0392b;font-weight:700}
+.receipt .r-center{text-align:center;font-size:10px;margin-top:4px}
+.receipt .r-footer{font-size:10px;margin-top:2px}
+.receipt .r-powered{font-size:9px;opacity:.5;margin-top:8px}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);z-index:80;max-width:90%;background:rgba(10,24,32,.92);border:1px solid #2dd4bf;padding:10px 18px;border-radius:14px;opacity:0;pointer-events:none;transition:.25s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ===== খাতা (Khata) ===== */
+.khata-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.dl{background:#0f172a;border:1px solid #1e293b;border-radius:18px;padding:14px;cursor:pointer}
+.dl .dtop{display:flex;align-items:center;gap:12px}
+.dl .av{flex:none;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#14b8a6,#2dd4bf);color:#0f172a;font-weight:700;font-size:18px;display:flex;align-items:center;justify-content:center}
+.dl .who{flex:1;min-width:0;display:flex;flex-direction:column}
+.dl .who b{font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dl .who small{color:#94a3b8;font-size:12px;margin-top:2px}
+.dl .amt{flex:none;text-align:right;display:flex;flex-direction:column;align-items:flex-end}
+.dl .amt span{color:#f87171;font-size:20px;font-weight:700;line-height:1.1}
+.dl .amt small{color:#94a3b8;font-size:11px}
+.dl .dacts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.dl .ab{display:flex;align-items:center;justify-content:center;gap:4px;padding:10px 4px;border-radius:12px;background:#1e293b;border:1px solid #334155;color:#e2e8f0;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap}
+.dl .ab.sms{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.4);color:#93c5fd}
+.dl .ab.wa{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4);color:#86efac}
+.dl .ab.call{background:rgba(45,212,191,.15);border-color:rgba(45,212,191,.4);color:#5eead4}
+.dl .ab.off{grid-column:1 / -1;opacity:.5;font-weight:500}
+.dl .dedit{display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+.dl .dd{flex:1;min-width:140px;display:flex;align-items:center;gap:6px;color:#94a3b8;font-size:13px}
+.dl .dd input{flex:1;min-width:0;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:8px 10px;color:#f1f5f9;outline:none}
+.dl .dedit button{border-radius:10px;padding:9px 14px;font-weight:600;font-size:13px;border:1px solid #334155;background:#1e293b;color:#e2e8f0}
+.dl .dedit button.ok{background:#14b8a6;border-color:#14b8a6;color:#0f172a}
+
+/* ===== Desktop / computer layout (≥1024px). Mobile layout is untouched. ===== */
+@media (min-width:800px){
+  /* bottom nav → left sidebar */
+  .app-nav{top:0!important;right:auto!important;width:220px;flex-direction:column!important;border-top:0!important;border-right:1px solid #1e293b;overflow-x:hidden!important;overflow-y:auto;padding:16px 10px!important;gap:4px}
+  .app-nav [data-nav]{flex:none!important;flex-direction:row!important;justify-content:flex-start;align-items:center;gap:12px!important;font-size:15px!important;padding:12px 14px!important;border-radius:12px;width:100%}
+  .app-nav [data-nav] span{font-size:22px!important}
+  .app-nav [data-nav]:hover{background:rgba(255,255,255,.06)}
+
+  /* wider content area next to the sidebar */
+  .app-main{max-width:none!important;margin-left:220px!important;margin-right:0!important;padding:12px 32px 32px!important}
+  .app-header{margin-left:-32px!important;margin-right:-32px!important;padding-left:32px!important;padding-right:32px!important}
+  .page-wrap{max-width:none;margin:0}
+
+  /* page-specific multi-column layouts */
+  .khata-grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .home-stats{grid-template-columns:repeat(4,1fr)!important}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .two-col>*{margin-bottom:0!important}
+  .home-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+  .home-cards>*{margin-bottom:0!important}
+  .home-cards .hc-donut{grid-row:span 2}
+  .bills-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:8px}
+
+  /* quick bill: centered window instead of bottom sheet */
+  #qb-modal{align-items:center!important}
+  #qb-modal>div{max-width:1100px!important;border-radius:24px!important;border-bottom-width:1px!important;padding:20px 24px!important}
+  .qb-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:start}
+  .qb-left #qb-items{max-height:calc(94vh - 230px);overflow-y:auto;padding-right:4px}
+  .qb-right{background:rgba(15,23,42,.6);border:1px solid #1e293b;border-radius:18px;padding:16px}
+
+  .toast{bottom:32px}
+}
+
+/* ===== Professional sidebar look (desktop) ===== */
+@media (min-width:800px){
+  .app-nav{background:#0b1220!important;box-shadow:2px 0 18px rgba(0,0,0,.35)}
+  .app-nav [data-nav]{position:relative;color:#94a3b8;transition:background .15s,color .15s}
+  .app-nav [data-nav].text-teal-400{background:rgba(45,212,191,.14);color:#5eead4!important}
+  .app-nav [data-nav].text-teal-400::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:#2dd4bf}
+  .app-nav [data-nav]:hover{color:#e2e8f0}
+  .list-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:40px}
+  .list-grid>p{grid-column:1 / -1}
+  .bills-grid{column-gap:12px}
+}
+@media (min-width:1536px){
+  .list-grid{grid-template-columns:repeat(3,1fr)}
+  .bills-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ===== Custom dropdown (replaces the plain web select) ===== */
+select.csel-native{display:none!important}
+.csel-btn{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;cursor:pointer;color:#f1f5f9;transition:border-color .15s,box-shadow .15s;min-width:0}
+.csel-btn .csel-label{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.csel-btn .csel-arrow{flex:none;color:#94a3b8;transition:transform .15s}
+.csel-btn:hover{border-color:#475569}
+.csel-btn:focus-visible,.csel-btn.csel-open{outline:none;border-color:#2dd4bf!important;box-shadow:0 0 0 3px rgba(45,212,191,.18)}
+.csel-btn.csel-open .csel-arrow{transform:rotate(180deg);color:#2dd4bf}
+.csel-btn:disabled{opacity:.5;cursor:not-allowed}
+.csel-menu{position:fixed;z-index:300;background:#0f172a;border:1px solid #334155;border-radius:14px;padding:6px;overflow-y:auto;box-shadow:0 18px 40px rgba(0,0,0,.55);animation:fadeIn .12s}
+.csel-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;color:#e2e8f0;font-size:15px;cursor:pointer}
+.csel-item i{font-style:normal;color:#2dd4bf;font-weight:700;opacity:0}
+.csel-item:hover{background:rgba(255,255,255,.07)}
+.csel-item.on{background:rgba(45,212,191,.14);color:#5eead4;font-weight:600}
+.csel-item.on i{opacity:1}
+.csel-item.dis{opacity:.4;cursor:not-allowed}
+
+/* result colours used in the payment/change popups */
+.res.ok{color:#2dd4bf}
+.res.bad{color:#f87171}
+.res b{font-weight:800}
+
+/* khata: account picker next to the collect amount */
+.dl .dedit .csel-btn{flex:1 1 140px;min-width:130px}

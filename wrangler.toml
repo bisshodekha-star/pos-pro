@@ -1,0 +1,40 @@
+name = "pos-pro"
+compatibility_date = "2024-09-01"
+pages_build_output_dir = "public"
+
+# ============================================================
+#  ENVIRONMENT VARIABLES — set these in Cloudflare Dashboard
+#  (Pages → Settings → Environment variables)
+#
+#  DATABASE_URL     = postgresql://user:pass@host/db?sslmode=require
+#                     (from Neon dashboard connection string)
+#  JWT_SECRET       = any long random string (e.g. 32+ chars)
+#                     MANDATORY — login will fail without it.
+#  JWT_ISSUER       = pos-pro
+#  APP_PASSWORD     = the login password for the POS app
+#
+#  DO NOT put real values here in wrangler.toml — set them in
+#  the Cloudflare dashboard so they stay secret.
+# ============================================================
+
+[vars]
+JWT_ISSUER = "pos-pro"
+
+# ============================================================
+#  RATE LIMITING (optional but recommended)
+#
+#  1. Go to Cloudflare Dashboard → Workers & Pages → KV
+#  2. Create a namespace named "RATE_LIMIT"
+#  3. Bind it to this Pages project:
+#     Settings → Functions → KV namespace bindings
+#     Variable name: RATE_LIMIT
+#     KV namespace: (the one you created)
+#
+#  If this binding is missing, login still works — it just
+#  falls back to a per-request check (so under heavy brute-force
+#  load it won't be effective). With KV bound, the login
+#  endpoint limits each IP to 10 failed attempts per 15 minutes.
+# ============================================================
+
+# For local dev only — copy .env.example to .dev.vars and fill in
+# Never commit .dev.vars
